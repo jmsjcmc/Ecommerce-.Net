@@ -7,20 +7,22 @@ namespace Catalog.Infrastructure.Repositories
 {
     public class TypeRepository: ITypeRepository
     {
-        private readonly IMongoCollection<Pr>
+        private readonly IMongoCollection<ProductType> _types;
         public TypeRepository(IConfiguration config)
         {
-            
+            var client = new MongoClient(config["DatabaseSettings:ConnectionString"]);
+            var db = client.GetDatabase(config["DatabaseSettings:DatabaseName"]);
+            _types = db.GetCollection<ProductType>(config["DatabaseSettings:TypeCollectionName"]);
         }
 
-        public Task<IEnumerable<ProductType>> GetAllTypes()
+        public async Task<IEnumerable<ProductType>> GetAllTypes()
         {
-            throw new NotImplementedException();
+            return await _types.Find(_ => true).ToListAsync();
         }
 
-        public Task<ProductType> GetByIdAsync(string id)
+        public async Task<ProductType> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _types.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }
