@@ -47,6 +47,12 @@ namespace Catalog.Infrastructure.Data
             {
                 var productData = await File.ReadAllTextAsync(Path.Combine(seedBasePath, "products.json"));
                 productList = JsonSerializer.Deserialize<List<Product>>(productData);
+                foreach(var product in productList)
+                {
+                    product.Id = null;
+                    if (product.CreatedDate == default)
+                        product.CreatedDate = DateTime.UtcNow;
+                }
                 await products.InsertManyAsync(productList);
             } else
             {
