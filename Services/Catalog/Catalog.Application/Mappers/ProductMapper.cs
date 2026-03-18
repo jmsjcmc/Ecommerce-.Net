@@ -1,4 +1,5 @@
-﻿using Catalog.Application.Responses;
+﻿using Catalog.Application.Commands;
+using Catalog.Application.Responses;
 using Catalog.Core.Entities;
 using Catalog.Core.Specifications;
 
@@ -27,5 +28,32 @@ namespace Catalog.Application.Mappers
             pagination.PageSize,
             pagination.Count,
             pagination.Data.Select(p => p.ToResponse()).ToList());
+        public static IList<ProductResponse> ToResponseList(this IEnumerable<Product> products) => products.Select(p => p.ToResponse()).ToList();
+        public static Product ToEntity(this CreateProductCommand command, ProductBrand brand, ProductType type) => new Product
+        {
+            Name = command.Name,
+            Summary = command.Summary,
+            Description = command.Description,
+            ImageFile = command.ImageFile,
+            Brand = brand,
+            Type = type,
+            Price = command.Price,
+            CreatedDate = DateTimeOffset.UtcNow
+        };
+        public static Product ToUpdateEntity(this UpdateProductCommand command, Product existing, ProductBrand brand, ProductType type)
+        {
+            return new Product
+            {
+                Id = existing.Id,
+                Name = command.Name,
+                Summary = command.Summary,
+                Description = command.Description,
+                ImageFile = command.ImageFile,
+                Brand = brand,
+                Type = type,
+                Price = command.Price,
+                CreatedDate = existing.CreatedDate
+            };
+        }
     }
 }
