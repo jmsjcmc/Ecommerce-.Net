@@ -4,7 +4,5 @@ using MediatR;
 
 namespace Catalog.Application.Queries
 {
-    public record GetAllProductQuery(CatalogSpecParams catalogSpecParams): IRequest<Pagination<ProductResponse>>
-    {
-    }
+    public record GetAllProductQuery(CatalogSpecParams catalogSpecParams) : IRequest<Pagination<ProductResponse>>;
 }

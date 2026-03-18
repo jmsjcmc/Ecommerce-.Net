@@ -1,6 +1,4 @@
-﻿
-
-using Catalog.Core.Entities;
+﻿using Catalog.Core.Entities;
 using Catalog.Core.Specifications;
 
 namespace Catalog.Core.Repositories
