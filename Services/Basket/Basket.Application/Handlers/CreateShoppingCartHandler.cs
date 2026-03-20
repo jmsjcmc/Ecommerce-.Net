@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Basket.Application.Handlers
 {
-    internal class CreateShoppingCartHandler : IRequestHandler<CreateShoppingCartCommand, ShoppingCartResponse>
+    public class CreateShoppingCartHandler : IRequestHandler<CreateShoppingCartCommand, ShoppingCartResponse>
     {
         private readonly IBasketRepository _basketRepository;
 
