@@ -2,6 +2,7 @@ using Basket.Application.Handlers;
 using Basket.Core.Repositories;
 using Basket.Infrastructure.Repositories;
 using Basket.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,11 @@ var assemblies = new Assembly[]
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
 // Redis
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
-builder.Services.AddStackExchangeRedisCache(())
+builder.Services.AddStackExchangeRedisCache((sp, options) =>
+{
+    var cacheSettings = sp.GetRequireService<IOptions<CacheSettings>>().Value;
+    options.Configuration = cacheSettings.ConnectionString;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -33,6 +38,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+// Swagger implementations
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
