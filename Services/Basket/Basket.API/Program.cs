@@ -26,10 +26,9 @@ var assemblies = new Assembly[]
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
 // Redis
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
-builder.Services.AddStackExchangeRedisCache((sp, options) =>
+builder.Services.AddStackExchangeRedisCache((options) =>
 {
-    var cacheSettings = sp.GetRequireService<IOptions<CacheSettings>>().Value;
-    options.Configuration = cacheSettings.ConnectionString;
+    options.Configuration = builder.Configuration.GetSection("CacheSettings").GetValue<string>("");
 });
 var app = builder.Build();
 
