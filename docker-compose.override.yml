@@ -19,16 +19,15 @@ services:
       - catalogdb
     ports:
       - "8000:8080"
-  basket.api:
+  basket:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - "CacheSettings__ConnectionString=basketdb:6379"
+      - "GrpcSettings__DiscountUrl=http://discount:8080"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672/"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+    depends_on:
+      - basketdb
+      - rabbitmq
     ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "8001:8080"
